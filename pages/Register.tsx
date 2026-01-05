@@ -17,6 +17,7 @@ const Register: React.FC = () => {
   const [userOtp, setUserOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
+    username: '',
     phone: '',
     password: '',
     referralCode: ''
@@ -38,6 +39,11 @@ const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!formData.username.trim()) {
+      setError(t.error_username);
+      return;
+    }
 
     if (!validatePhone(formData.phone)) {
       setError(t.error_phone);
@@ -64,6 +70,7 @@ const Register: React.FC = () => {
         password: formData.password,
         options: {
           data: {
+            username: formData.username,
             phone_number: formData.phone,
             referral_code: formData.referralCode || null
           }
@@ -93,6 +100,23 @@ const Register: React.FC = () => {
         )}
 
         <div className="space-y-4">
+          {/* Username Input */}
+          <div className="relative group">
+            <div className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors z-10`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              required
+              placeholder={t.username_placeholder}
+              className={`w-full bg-[#1e293b] border border-white/10 rounded-xl py-3.5 ${lang === 'ar' ? 'pr-12 pl-4' : 'pl-12 pr-4'} focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all text-sm placeholder:text-gray-600`}
+              value={formData.username}
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            />
+          </div>
+
           {/* Phone Input */}
           <div className="relative group">
             <div className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors z-10`}>
